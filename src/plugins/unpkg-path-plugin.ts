@@ -1,5 +1,10 @@
 import * as esbuild from 'esbuild-wasm'
 import axios from 'axios'
+import localforage from 'localforage'
+
+const fileChache = localforage.createInstance({
+  name: 'filecache',
+})
 
 export const unpkgPathPlugin = () => {
   return {
@@ -34,19 +39,38 @@ export const unpkgPathPlugin = () => {
           return {
             loader: 'jsx',
             contents: `
-              const message = require('nested-test-pkg')
+              const message = require('react')
               console.log(message);
             `,
           }
         }
 
+        // CHeck to see if we've already fetched this file
+        const cachedResult = await fileChache.getItem<esbuild.OnLoadResult>(
+          args.path
+        )
+
+        // and if it's in the cache, return it immediately
+        if (cachedResult) {
+          return cachedResult
+        }
+
         const { data, request } = await axios.get(args.path)
 
-        return {
+        // store response in cache
+        // as key we'll store args.path
+        // as value we can use either data or the object under
+
+        const result: esbuild.OnLoadResult = {
           loader: 'jsx',
           contents: data,
           resolveDir: new URL('./', request.responseURL).pathname,
         }
+
+        // store response in cache
+        await fileChache.setItem(args.path, result)
+
+        return result
       })
     },
   }
