@@ -29,44 +29,34 @@ export const unpkgPathPlugin = (inputCode: string) => {
         }
       })
 
-      build.onLoad({ filter: /.*/ }, async (args: any) => {
-        if (args.path === 'index.js') {
-          return {
-            loader: 'jsx',
-            contents: inputCode,
-          }
+      build.onLoad({ filter: /(^index\.js$)/ }, () => {
+        return {
+          loader: 'jsx',
+          contents: inputCode,
         }
+      })
 
-        // CHeck to see if we've already fetched this file
+      build.onLoad({ filter: /.css$/ }, async (args: any) => {
         const cachedResult = await fileChache.getItem<esbuild.OnLoadResult>(
           args.path
         )
 
-        // and if it's in the cache, return it immediately
         if (cachedResult) {
           return cachedResult
         }
 
         const { data, request } = await axios.get(args.path)
-        const fileType = args.path.match(/.css$/) ? 'css' : 'jsx'
 
         const escaped = data
           .replace(/\n/g, '')
           .replace(/"/g, '\\"')
           .replace(/'/g, "\\'")
 
-        const contents =
-          fileType === 'css'
-            ? `
+        const contents = `
           const style = document.createElement('style')
           style.innerText = '${escaped}'
           document.head.appendChild(style)
         `
-            : data
-
-        // store response in cache
-        // as key we'll store args.path
-        // as value we can use either data or the object under
 
         const result: esbuild.OnLoadResult = {
           loader: 'jsx',
@@ -74,7 +64,28 @@ export const unpkgPathPlugin = (inputCode: string) => {
           resolveDir: new URL('./', request.responseURL).pathname,
         }
 
-        // store response in cache
+        await fileChache.setItem(args.path, result)
+
+        return result
+      })
+
+      build.onLoad({ filter: /.*/ }, async (args: any) => {
+        const cachedResult = await fileChache.getItem<esbuild.OnLoadResult>(
+          args.path
+        )
+
+        if (cachedResult) {
+          return cachedResult
+        }
+
+        const { data, request } = await axios.get(args.path)
+
+        const result: esbuild.OnLoadResult = {
+          loader: 'jsx',
+          contents: data,
+          resolveDir: new URL('./', request.responseURL).pathname,
+        }
+
         await fileChache.setItem(args.path, result)
 
         return result
