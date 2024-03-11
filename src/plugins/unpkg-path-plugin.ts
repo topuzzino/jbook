@@ -36,7 +36,7 @@ export const unpkgPathPlugin = (inputCode: string) => {
         }
       })
 
-      build.onLoad({ filter: /.css$/ }, async (args: any) => {
+      build.onLoad({ filter: /.*/ }, async (args: any) => {
         const cachedResult = await fileChache.getItem<esbuild.OnLoadResult>(
           args.path
         )
@@ -44,7 +44,9 @@ export const unpkgPathPlugin = (inputCode: string) => {
         if (cachedResult) {
           return cachedResult
         }
+      })
 
+      build.onLoad({ filter: /.css$/ }, async (args: any) => {
         const { data, request } = await axios.get(args.path)
 
         const escaped = data
@@ -70,14 +72,6 @@ export const unpkgPathPlugin = (inputCode: string) => {
       })
 
       build.onLoad({ filter: /.*/ }, async (args: any) => {
-        const cachedResult = await fileChache.getItem<esbuild.OnLoadResult>(
-          args.path
-        )
-
-        if (cachedResult) {
-          return cachedResult
-        }
-
         const { data, request } = await axios.get(args.path)
 
         const result: esbuild.OnLoadResult = {
