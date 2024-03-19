@@ -8,7 +8,6 @@ const root = ReactDOM.createRoot(el!)
 
 const App = () => {
   const [input, setInput] = useState('')
-  const [code, setCode] = useState('')
   const ref = useRef<any>()
 
   const iframe = useRef<any>()
@@ -76,7 +75,6 @@ const App = () => {
       <div>
         <button onClick={() => handleClick()}>Submit</button>
       </div>
-      <pre>{code}</pre>
       <iframe
         ref={iframe}
         srcDoc={html}
