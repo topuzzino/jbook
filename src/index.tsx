@@ -79,7 +79,7 @@ const App = () => {
         ref={iframe}
         srcDoc={html}
         sandbox='allow-scripts'
-        title='iframe'
+        title='code preview'
       />
     </div>
   )
