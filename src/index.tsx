@@ -11,6 +11,8 @@ const App = () => {
   const [code, setCode] = useState('')
   const ref = useRef<any>()
 
+  const iframe = useRef<any>()
+
   const startService = async () => {
     ref.current = await esbuild.startService({
       worker: true,
@@ -38,8 +40,22 @@ const App = () => {
       },
     })
 
-    setCode(result.outputFiles[0].text)
+    iframe.current.contentWindow.postMessage(result.outputFiles[0].text, '*')
   }
+
+  const html = `
+    <html>
+      <head></head>
+      <body>
+        <div id='root'></div>
+        <script>
+          window.addEventListener('message', (event) => {
+            eval(event.data)
+          }, false)
+        </script>
+      </body>
+    </html>
+  `
 
   return (
     <div>
@@ -53,6 +69,12 @@ const App = () => {
         <button onClick={() => handleClick()}>Submit</button>
       </div>
       <pre>{code}</pre>
+      <iframe
+        ref={iframe}
+        srcDoc={html}
+        sandbox='allow-scripts'
+        title='iframe'
+      />
     </div>
   )
 }
