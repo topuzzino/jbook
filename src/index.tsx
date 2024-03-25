@@ -2,6 +2,7 @@ import ReactDOM from 'react-dom/client'
 import * as esbuild from 'esbuild-wasm'
 import { useState, useEffect, useRef, SetStateAction } from 'react'
 import { unpkgPathPlugin } from './plugins/unpkg-path-plugin'
+import CodeEditor from './code-editor'
 
 const el = document.getElementById('root')
 const root = ReactDOM.createRoot(el!)
@@ -66,6 +67,7 @@ const App = () => {
 
   return (
     <div>
+      <CodeEditor />
       <textarea
         value={input}
         onChange={(e: { target: { value: SetStateAction<string> } }) =>
