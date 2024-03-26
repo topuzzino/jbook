@@ -67,7 +67,7 @@ const App = () => {
 
   return (
     <div>
-      <CodeEditor />
+      <CodeEditor initialValue={input} onChange={(value) => setInput(value)} />
       <textarea
         value={input}
         onChange={(e: { target: { value: SetStateAction<string> } }) =>
