@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import MonacoEditor, { EditorDidMount } from '@monaco-editor/react'
 import prettier from 'prettier'
 import parser from 'prettier/parser-babel'
+import 'bulmaswatch/superhero/bulmaswatch.min.css'
 
 interface CodeEditorProps {
   initialValue: string
