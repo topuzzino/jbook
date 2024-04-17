@@ -38,6 +38,7 @@ const Preview: React.FC<PreviewProps> = ({ code }) => {
       srcDoc={html}
       sandbox='allow-scripts'
       title='code preview'
+      style={{ backgroundColor: '#fff' }}
     />
   )
 }
