@@ -19,14 +19,16 @@ const Resizable: React.FC<ResizableProps> = ({ direction, children }) => {
       minConstraints: [window.innerWidth * 0.2, Infinity],
 
     }
+
   } else {
     resizableProps = {
       height: 300,
       width: Infinity,
-      resizeHandles: ['w'],
+      resizeHandles: ['s'],
       maxConstraints: [Infinity, window.innerHeight * 0.9],
       minConstraints: [Infinity, 24],
     }
+
   }
 
   return (
