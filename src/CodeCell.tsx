@@ -22,13 +22,12 @@ const CodeCell = () => {
           flexDirection: 'row',
         }}
       >
-        <CodeEditor
-          initialValue={input}
-          onChange={(value) => setInput(value)}
-        />
-        {/* <div>
-          <button onClick={() => handleClick()}>Submit</button>
-        </div> */}
+        <Resizable direction='horizontal'>
+          <CodeEditor
+            initialValue={input}
+            onChange={(value) => setInput(value)}
+          />
+        </Resizable>
         <Preview code={code} />
       </div>
     </Resizable>
