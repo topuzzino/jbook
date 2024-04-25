@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import CodeEditor from './CodeEditor'
-import Preview from './preview'
+import Preview from './Preview'
 import bundle from './bundler'
 import Resizable from './Resizable'
 
@@ -8,10 +8,10 @@ const CodeCell = () => {
   const [input, setInput] = useState('')
   const [code, setCode] = useState('')
 
-  const handleClick = async () => {
-    const output = await bundle(input)
-    setCode(output)
-  }
+  // const handleClick = async () => {
+  //   const output = await bundle(input)
+  //   setCode(output)
+  // }
 
   return (
     <Resizable direction='vertical'>
